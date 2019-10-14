@@ -11,6 +11,7 @@
 
     <modules>
         <module>L01-maven</module>
+        <module>L02-collections</module>
     </modules>
 
     <properties>
