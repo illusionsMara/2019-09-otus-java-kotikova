@@ -180,40 +180,7 @@ public class DIYarrayList<T> implements List<T> {
     @Override
     public void sort( Comparator<? super T> c ) {
         if( size > 1 ) {
-            int high = size - 1;
-            quickSort(array, 0, high, c);
-        }
-    }
-
-    private void quickSort(T[] array, int low, int high, Comparator<? super T> c) {
-        if (array.length == 0) {
-            return;
-        }
-        if (low >= high) {
-            return;
-        }
-        T point = array[low];
-        int i = low, j = high;
-        while (i <= j) {
-            while (c.compare(array[i], point) < 0) {
-                i++;
-            }
-            while (c.compare(array[j], point) > 0) {
-                j--;
-            }
-            if (i <= j) {
-                T temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
-                i++;
-                j--;
-            }
-        }
-        if (low < j) {
-            quickSort( array, low, j, c );
-        }
-        if (high > i) {
-            quickSort( array, i, high, c );
+            Arrays.sort(array, 0, size, c);
         }
     }
 
