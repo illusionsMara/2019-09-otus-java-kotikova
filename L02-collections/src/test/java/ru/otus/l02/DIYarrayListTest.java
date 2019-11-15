@@ -9,12 +9,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DIYarrayListTest {
-    private DIYarrayList<Integer> diYarrayList;
+    private List<Integer> diYarrayList;
     private Integer item = 1000;
     private int index = 12;
 
-    private DIYarrayList<Integer> fillList() {
-        DIYarrayList<Integer> diYarrayList = new DIYarrayList();
+    private List<Integer> fillList() {
+        List<Integer> diYarrayList = new DIYarrayList();
         for (int i = 0; i < 25; i++) {
             Integer element = (int)(Math.random() * 100);
             diYarrayList.add(element);
@@ -58,18 +58,24 @@ public class DIYarrayListTest {
     @DisplayName("T remove( int index )")
     public void removeByIndexTest() {
         Integer expected = diYarrayList.get(index + 1);
+        int sizeBeforeRemove = diYarrayList.size();
         diYarrayList.remove(index);
-        assertEquals(expected, diYarrayList.get(index));
+        assertAll(
+                () -> assertEquals(expected, diYarrayList.get(index)),
+                () -> assertEquals(sizeBeforeRemove - 1, diYarrayList.size())
+        );
     }
 
     @Test
     @DisplayName("remove( Object o )")
     public void removeObjectTest() {
         diYarrayList.add(item);
+        int sizeBeforeRemove = diYarrayList.size();
         diYarrayList.remove(item);
         for(Integer element: diYarrayList) {
             assertFalse(item.equals(element));
         }
+        assertEquals(sizeBeforeRemove - 1, diYarrayList.size());
     }
 
     @Test
@@ -110,7 +116,7 @@ public class DIYarrayListTest {
     @Test
     @DisplayName("Collections.copy(List<? super T> dest, List<? extends T> src)")
     public void copyTest() {
-        DIYarrayList<Integer> dest = new DIYarrayList<>();
+        List<Integer> dest = new DIYarrayList<>();
         for(int i = 0; i < diYarrayList.size(); i++) {
             dest.add(null);
         }

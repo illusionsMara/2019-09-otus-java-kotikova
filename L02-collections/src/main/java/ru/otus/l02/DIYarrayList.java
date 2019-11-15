@@ -95,8 +95,9 @@ public class DIYarrayList<T> implements List<T> {
         if(isIndexOutOfBound( index )) {
             throw new IndexOutOfBoundsException();
         }
+        T previous = array[index];
         array[index] = element;
-        return element;
+        return previous;
     }
 
     @Override
@@ -161,7 +162,7 @@ public class DIYarrayList<T> implements List<T> {
     @Override
     public List<T> subList( int fromIndex, int toIndex ) {
         if(fromIndex == toIndex) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         } else {
             int newVolume = toIndex - fromIndex;
             List newList = new DIYarrayList( newVolume );
