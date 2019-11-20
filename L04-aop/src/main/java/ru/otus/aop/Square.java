@@ -11,12 +11,12 @@ public class Square implements Figure {
     }
 
     @Override
-    public int getArea() {
-        return side * side;
+    public int getPerimeter() {
+        return 4 * side;
     }
 
     @Override
-    public String getColor() {
-        return color;
+    public int getArea() {
+        return side * side;
     }
 }

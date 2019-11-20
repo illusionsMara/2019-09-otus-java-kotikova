@@ -1,14 +1,24 @@
 package ru.otus.aop;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 class IoC {
+    private static Map<Method, Annotation> map = new HashMap();
+
     static Figure createFigure() {
+        Class clazz = Figure.class;
+        Method[] methods = clazz.getMethods();
+        for(int i = 0; i < methods.length; i++) {
+            map.put( methods[i], methods[i].getAnnotation(Log.class));
+        }
         InvocationHandler handler = new FigureInvocationHandler(new Square());
-        return (Figure) Proxy.newProxyInstance( IoC.class.getClassLoader(), new Class<?>[] {Figure.class}, handler);
+        return (Figure)Proxy.newProxyInstance(IoC.class.getClassLoader(), new Class<?>[] {clazz}, handler);
     }
 
     static class FigureInvocationHandler implements InvocationHandler {
@@ -20,7 +30,7 @@ class IoC {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            Log logAnnotation = method.getAnnotation( Log.class );
+            Log logAnnotation = (Log)map.get(method);
             if(logAnnotation != null) {
                 StringBuilder log = new StringBuilder("start method: " + method.getName());
                 LoggedTarget[] loggedTargets = logAnnotation.loggedTarget();

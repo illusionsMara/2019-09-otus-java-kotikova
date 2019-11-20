@@ -1,12 +1,15 @@
 package ru.otus.aop;
 
+import static ru.otus.aop.LoggedTarget.PARAMS;
+import static ru.otus.aop.LoggedTarget.RETURN;
+
 public interface Figure {
 
-    @Log(loggedTarget = {LoggedTarget.PARAMS, LoggedTarget.RETURN})
+    @Log(loggedTarget = {PARAMS, RETURN})
     public void initSquare(int side, String color);
 
-    @Log(loggedTarget = {LoggedTarget.RETURN})
-    public int getArea();
+    @Log(loggedTarget = {RETURN})
+    public int getPerimeter();
 
-    public String getColor();
+    public int getArea();
 }
