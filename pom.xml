@@ -12,6 +12,7 @@
     <modules>
         <module>L01-maven</module>
         <module>L02-collections</module>
+        <module>L06-atm_emulator</module>
     </modules>
 
     <properties>
@@ -34,12 +35,12 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${com.google.guava.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>org.codehaus.mojo:animal-sniffer:1.18</artifactId>
-                    </exclusion>
-                </exclusions>
+<!--                <exclusions>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>org.codehaus.mojo</groupId>-->
+<!--                        <artifactId>org.codehaus.mojo:animal-sniffer:1.18</artifactId>-->
+<!--                    </exclusion>-->
+<!--                </exclusions>-->
             </dependency>
             <dependency>
                 <groupId>org.junit.platform</groupId>
