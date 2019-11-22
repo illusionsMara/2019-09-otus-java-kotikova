@@ -5,11 +5,8 @@ public class Cell implements Comparable<Cell> {
     private int count;
 
     public Cell(int nominal) {
-        if(nominal == 0) {
-            throw new IllegalArgumentException("There can't be cells with a nominal of zero.");
-        }
-        if(nominal < 0) {
-            throw new IllegalArgumentException("There can't be cells with negative nominal.");
+        if(nominal <= 0) {
+            throw new IllegalArgumentException("There can't be cells with negative or zero nominal");
         }
         this.nominal = nominal;
     }
@@ -19,19 +16,32 @@ public class Cell implements Comparable<Cell> {
     }
 
     public void put() {
+        System.out.println("put banknote in the cell " + nominal);
         count = count + 1;
     }
 
+    /**
+     * Выдать доступную часть указанной суммы
+     *
+     * @param amount сумма
+     * @return  остаток суммы
+     */
     public int giveOutAvailableAmount(int amount) {
-        int saldo = getAvailableAmount(amount);
+        int saldo = getSaldo(amount);
         int countToTake = amount / nominal;
         correctCount(countToTake);
         return saldo;
     }
 
-    public int getAvailableAmount(int amount) {
+    /**
+     * Рассчитать остаток, который получится, если данную сумму полжить в ячейку
+     *
+     * @param amount сумма
+     * @return  остаток суммы
+     */
+    public int getSaldo(int amount) {
         int countToTake = amount / nominal;
-        if(countToTake >= count) {
+        if(countToTake > count) {
             countToTake = count;
         }
         int amountToTake = countToTake * nominal;
@@ -42,6 +52,11 @@ public class Cell implements Comparable<Cell> {
         count = (countToTake < count) ? (count - countToTake) : 0;
     }
 
+    /**
+     * Выдать сумму остатка денежных средств ячейки
+     *
+     * @return размер суммы
+     */
     public int giveOutBalance() {
         int saldo = count * nominal;
         count = 0;
@@ -55,6 +70,6 @@ public class Cell implements Comparable<Cell> {
 
     @Override
     public String toString() {
-        return nominal + ": " + count + " bill";
+        return nominal + ": " + count + " banknote";
     }
 }

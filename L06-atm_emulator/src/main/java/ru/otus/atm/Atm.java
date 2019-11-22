@@ -28,6 +28,12 @@ public class Atm {
         }
     }
 
+    /**
+     * Принять перечень банкнот указанных номиналов и разложить по соответствующим ячейкам
+     *
+     * @param nominals номиналы банкнот
+     * @throws AtmException, если этот банкомат не принимает банкноты данного номинала
+     */
     public void acceptAll(int... nominals) throws AtmException {
         for(int nominal: nominals) {
             accept(nominal);
@@ -58,7 +64,7 @@ public class Atm {
 
     private void tryGiveOutAmount(int amount) throws AtmException {
         for(Cell cell: cells) {
-            amount = cell.getAvailableAmount(amount);
+            amount = cell.getSaldo(amount);
         }
         if(amount > 0) {
             throw new AtmException("The amount remained outstanding: " + amount);
