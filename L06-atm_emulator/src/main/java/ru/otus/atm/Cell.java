@@ -1,22 +1,22 @@
 package ru.otus.atm;
 
 public class Cell implements Comparable<Cell> {
-    private int nominal;
+    private Nominal nominal;
     private int count;
 
-    public Cell(int nominal) {
-        if(nominal <= 0) {
+    public Cell(Nominal nominal) {
+        if(nominal.getValue() <= 0) {
             throw new IllegalArgumentException("There can't be cells with negative or zero nominal");
         }
         this.nominal = nominal;
     }
 
-    public int getNominal() {
+    public Nominal getNominal() {
         return nominal;
     }
 
     public void put() {
-        System.out.println("put banknote in the cell " + nominal);
+        System.out.println("put banknote in the cell " + nominal.getValue());
         count = count + 1;
     }
 
@@ -28,8 +28,11 @@ public class Cell implements Comparable<Cell> {
      */
     public int giveOutAvailableAmount(int amount) {
         int saldo = getSaldo(amount);
-        int countToTake = amount / nominal;
-        correctCount(countToTake);
+        int countToTake = getCountToTake(amount);
+        if(countToTake != 0) {
+            System.out.println("give out " + countToTake + " banknotes with " + nominal);
+        }
+        count = count - countToTake;
         return saldo;
     }
 
@@ -40,16 +43,17 @@ public class Cell implements Comparable<Cell> {
      * @return  остаток суммы
      */
     public int getSaldo(int amount) {
-        int countToTake = amount / nominal;
-        if(countToTake > count) {
-            countToTake = count;
-        }
-        int amountToTake = countToTake * nominal;
+        int countToTake = getCountToTake(amount);
+        int amountToTake = countToTake * nominal.getValue();
         return amount - amountToTake;
     }
 
-    private void correctCount(int countToTake) {
-        count = (countToTake < count) ? (count - countToTake) : 0;
+    private int getCountToTake(int amount) {
+        int countToTake = amount / nominal.getValue();
+        if(countToTake > count) {
+            countToTake = count;
+        }
+        return countToTake;
     }
 
     /**
@@ -58,14 +62,14 @@ public class Cell implements Comparable<Cell> {
      * @return размер суммы
      */
     public int giveOutBalance() {
-        int saldo = count * nominal;
+        int saldo = count * nominal.getValue();
         count = 0;
         return saldo;
     }
 
     @Override
     public int compareTo(Cell anotherCell) {
-        return (this.nominal > anotherCell.nominal) ? -1 : ((this.nominal == anotherCell.nominal) ? 0 : 1);
+        return (this.nominal.getValue() > anotherCell.nominal.getValue()) ? -1 : ((this.nominal == anotherCell.nominal) ? 0 : 1);
     }
 
     @Override

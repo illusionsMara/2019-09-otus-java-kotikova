@@ -1,25 +1,43 @@
 package ru.otus.atm;
 
+import ru.otus.atm.exception.AtmException;
+import static ru.otus.atm.Nominal.*;
+
 public class Main {
     public static void main( String[] args ) throws Exception {
-        // инициализируем банкомат с указанными ячейками
-        Atm atm = new Atm(new Cell(100), new Cell(50), new Cell(100), new Cell(10));
-
+        // инициализируем банкомат
+        Atm atm = new Atm();
         // кладем в банкомат купюры
-        atm.acceptAll(50, 100, 50, 50, 10, 10, 10, 100, 10, 10);
+        atm.acceptAll(
+                NOMINAL_50,
+                NOMINAL_100,
+                NOMINAL_50,
+                NOMINAL_50,
+                NOMINAL_10,
+                NOMINAL_10,
+                NOMINAL_10,
+                NOMINAL_100,
+                NOMINAL_10,
+                NOMINAL_10);
         // состояние банкомата
         System.out.println(atm.toString());
-
         // снимаем некоторую сумму
-        int amount = 250;
-        atm.giveOutAmount( amount );
-        System.out.println("Give out amount: " + amount);
-        // состояние банкомата
-        System.out.println(atm.toString());
-
+        int amount = 350;
+        try {
+            atm.giveOutAmount(amount);
+            System.out.println("=========================");
+            System.out.println("Give out amount: " + amount);
+            System.out.println("=========================");
+            // состояние банкомата
+            System.out.println(atm.toString());
+        } catch (AtmException e) {
+            System.out.println("Amount = " + amount + " cannot be issued");
+        }
         // снимаем остаток денежных средств
         int saldo = atm.giveOutBalance();
+        System.out.println("=========================");
         System.out.println("Cash balance issued: " + saldo);
+        System.out.println("=========================");
         // состояние банкомата
         System.out.println(atm.toString());
     }
