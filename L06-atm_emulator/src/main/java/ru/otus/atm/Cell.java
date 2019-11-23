@@ -5,9 +5,6 @@ public class Cell implements Comparable<Cell> {
     private int count;
 
     public Cell(Nominal nominal) {
-        if(nominal.getValue() <= 0) {
-            throw new IllegalArgumentException("There can't be cells with negative or zero nominal");
-        }
         this.nominal = nominal;
     }
 
