@@ -14,10 +14,14 @@ public class Department {
         atms.add(atm);
     }
 
+    public int getBalance() {
+        return atms.stream().mapToInt(Atm::getBalance).sum();
+    }
+
     /**
      * Собрать сумму остатков со всех ATM
      */
-    public int withdrawAll() {
+    public int giveOutBalance() {
         GiveOutBalanceCommand command = new GiveOutBalanceCommand();
         return atms.stream().mapToInt( command::execute ).sum();
     }
@@ -32,7 +36,7 @@ public class Department {
 
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder("Department ATM:\n");
+        StringBuilder str = new StringBuilder("Department ATMs:\n");
         for (Atm atm: atms) {
             str.append(atm.toString()).append("\n");
         }

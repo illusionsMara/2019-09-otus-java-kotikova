@@ -2,54 +2,83 @@ package ru.otus.department;
 
 import ru.otus.department.atm.Atm;
 import ru.otus.department.atm.AtmFactory;
-import static ru.otus.department.Bank.*;
+import ru.otus.department.exception.AtmException;
+
+import static ru.otus.department.enumeration.Bank.*;
+import static ru.otus.department.enumeration.Nominal.*;
 
 public class Main {
     public static void main(String[] args) {
+        // инициализируем банкоматы Тинькова и Сбербанка
+        Atm tfAtm = AtmFactory.create(TINKOFF);
+        Atm sbAtm = AtmFactory.create(SBERBANK);
+        // кладем в банкоматы купюры
+        tfAtm.acceptAll(
+                NOMINAL_50,
+                NOMINAL_100,
+                NOMINAL_50,
+                NOMINAL_50,
+                NOMINAL_10,
+                NOMINAL_10,
+                NOMINAL_10,
+                NOMINAL_100,
+                NOMINAL_10,
+                NOMINAL_10);
+        sbAtm.acceptAll(
+                NOMINAL_50,
+                NOMINAL_100,
+                NOMINAL_10,
+                NOMINAL_100,
+                NOMINAL_10,
+                NOMINAL_10);
+        // сохраняем начальное состояние банкоматов
+        tfAtm.save();
+        sbAtm.save();
+        // создаем департамент и добавляем в него банкоматы
         Department department = new Department();
-        // Создаем банкоматы и добавляем их в департамент
-        Atm atm1 = AtmFactory.create(TINKOFF, 100);
-        Atm atm2 = AtmFactory.create(SBERBANK, 200);
-        Atm atm3 = AtmFactory.create(ALFABANK, 300);
-        department.addAtm(atm1);
-        department.addAtm(atm2);
-        department.addAtm(atm3);
-
-        // Сохраняем начальное состояние банкоматов
-        atm1.save();
-        atm2.save();
-        atm3.save();
+        department.addAtm(tfAtm);
+        department.addAtm(sbAtm);
         System.out.println(department.toString());
 
-        // Устанавливаем новый баланс в банкоматах и сохраняем состояние
-        atm1.setBalance(1000);
-        atm2.setBalance(2000);
-        atm3.setBalance(3000);
-        atm1.save();
-        atm2.save();
-        atm3.save();
+        // снимаем некоторую сумму из банкомата Тинькова
+        int amount = 350;
+        try {
+            tfAtm.giveOutAmount(amount);
+            System.out.println("=========================");
+            System.out.println("Give out amount from Tinkoff ATM: " + amount);
+            System.out.println("=========================");
+            // состояние банкомата
+            System.out.println(department.toString());
+        } catch (AtmException e) {
+            System.out.println("Amount = " + amount + " cannot be issued");
+        }
+        tfAtm.save();
+
+        // снимаем некоторую сумму из банкомата Сбербанка
+        int amountsb = 150;
+        try {
+            sbAtm.giveOutAmount(amountsb);
+            System.out.println("=========================");
+            System.out.println("Give out amount from Sberbank ATM: " + amountsb);
+            System.out.println("=========================");
+            // состояние банкомата
+            System.out.println(department.toString());
+        } catch (AtmException e) {
+            System.out.println("Amount = " + amountsb + " cannot be issued");
+        }
+        sbAtm.save();
+
+        // снимаем остаток денежных средств
+        int saldo = department.giveOutBalance();
+        System.out.println("=========================");
+        System.out.println("Cash balance issued: " + saldo);
+        System.out.println("=========================");
+        // состояние банкомата
         System.out.println(department.toString());
 
-        atm1.setBalance(10000);
-        atm2.setBalance(20000);
-        atm3.setBalance(30000);
-        atm1.save();
-        atm2.save();
-        atm3.save();
-        System.out.println(department.toString());
-
-        // Департамент восстанавливает состояние всех своих банкоматов до начального
+        // восстановливаем состояние всех ATM до начального
         department.restoreAtmState();
         System.out.println("-----------------------------------");
-        System.out.print("-> Department restores states of its ATMs:\n" + department.toString());
-
-        // Департамент собирает сумму остатков со всех своих банкоматов
-        System.out.println("-----------------------------------");
-        System.out.println("-> Department collects balances from all its ATMs:");
-        System.out.println( "Balance = " + department.withdrawAll());
-
-        // Состояние банкоматов после снятия остатков
-        System.out.println("-----------------------------------");
-        System.out.println("States of ATM:\n" + department.toString());
+        System.out.println("States of ATMs:\n" + department.toString());
     }
 }

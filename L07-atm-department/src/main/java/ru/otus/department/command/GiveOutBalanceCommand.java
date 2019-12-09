@@ -6,7 +6,7 @@ public class GiveOutBalanceCommand implements Command<Atm, Integer> {
 
     @Override
     public Integer execute( Atm atm ) {
-        return atm.withdrawAll();
+        return atm.giveOutBalance();
     }
 
 }

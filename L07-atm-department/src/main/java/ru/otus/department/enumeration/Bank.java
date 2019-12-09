@@ -1,4 +1,4 @@
-package ru.otus.department;
+package ru.otus.department.enumeration;
 
 public enum Bank {
     TINKOFF,

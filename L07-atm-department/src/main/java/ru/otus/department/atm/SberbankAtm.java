@@ -1,56 +1,104 @@
 package ru.otus.department.atm;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import ru.otus.department.Cell;
+import ru.otus.department.command.RestoreCellStateCommand;
+import ru.otus.department.command.SaveCellStateCommand;
+import ru.otus.department.enumeration.Nominal;
+import ru.otus.department.exception.AtmException;
+
+import java.util.*;
 
 class SberbankAtm implements Atm {
-    private int balance;
-    private Deque<Memento> history = new ArrayDeque<>();
+    private final Set<Cell> cells;
 
-    SberbankAtm(int balance) {
-        this.balance = balance;
+    SberbankAtm() {
+        this.cells = new TreeSet<>();
+        Arrays.stream(Nominal.values()).forEach(nominal -> cells.add(new Cell(nominal)));
     }
 
-    @Override
-    public void setBalance(int balance) {
-        this.balance = balance;
+    /**
+     * Принять банкноту указанного номинала и положить в соответствующую ячейку
+     * @param nominal номинал банкноты
+     */
+    public void accept(Nominal nominal) {
+        Cell cell = getCell(nominal);
+        cell.put();
     }
 
-    @Override
-    public int withdrawAll() {
-        int saldo = balance;
-        System.out.println("Sberbank ATM: withdraw " + saldo);
-        balance = 0;
-        return saldo;
+    /**
+     * Принять перечень банкнот указанных номиналов и разложить по соответствующим ячейкам
+     * @param nominals номиналы банкнот
+     */
+    public void acceptAll(Nominal... nominals) {
+        for(Nominal nominal: nominals) {
+            accept(nominal);
+        }
+    }
+
+    private Cell getCell(Nominal nominal) {
+        for(Cell cell: cells) {
+            if(cell.getNominal() == nominal) {
+                return cell;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Выдать указанную сумму минимальным количеством банкнот
+     *
+     * @param amount сумма
+     * @throws AtmException, если данную сумму нельзя выдать
+     */
+    public void giveOutAmount(int amount) throws AtmException {
+        this.tryGiveOutAmount(amount);
+        for(Cell cell: cells) {
+            amount = cell.giveOutAvailableAmount(amount);
+        }
+    }
+
+    private void tryGiveOutAmount(int amount) throws AtmException {
+        for(Cell cell: cells) {
+            amount = cell.getSaldo(amount);
+        }
+        if(amount > 0) {
+            throw new AtmException("The amount remained outstanding: " + amount);
+        }
+    }
+
+    public int getBalance() {
+        return cells.stream().mapToInt(Cell::getBalance).sum();
+    }
+
+    /**
+     * Выдать сумму остатка денежных средств
+     */
+    public int giveOutBalance() {
+        return cells.stream().mapToInt(Cell::giveOutBalance).sum();
     }
 
     @Override
     public void save() {
-        history.push( new Memento() );
-    }
-
-    @Override
-    public void undo() {
-        Memento memento = history.pop();
-        this.balance = memento.memBalance;
+        SaveCellStateCommand command = new SaveCellStateCommand();
+        cells.forEach( command::execute );
     }
 
     @Override
     public void restore() {
-        Memento memento = history.removeLast();
-        this.balance = memento.memBalance;
-    }
-
-    private final class Memento {
-        private final int memBalance;
-
-        private Memento() {
-            this.memBalance = balance;
-        }
+        RestoreCellStateCommand command = new RestoreCellStateCommand();
+        cells.forEach( command::execute );
     }
 
     @Override
     public String toString() {
-        return "Sberbank ATM: balance = " + balance;
+        StringBuilder str = new StringBuilder("Sberbank ATM:\n");
+        if(cells != null) {
+            for(Cell cell : cells) {
+                if(cell != null) {
+                    str.append(cell.toString()).append("\n");
+                }
+            }
+        }
+        return str.toString();
     }
 }

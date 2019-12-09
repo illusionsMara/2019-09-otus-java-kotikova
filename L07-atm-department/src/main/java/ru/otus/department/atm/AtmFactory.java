@@ -1,17 +1,17 @@
 package ru.otus.department.atm;
 
-import ru.otus.department.Bank;
+import ru.otus.department.enumeration.Bank;
 
 public class AtmFactory {
 
-    public static Atm create(Bank bank, int balance) {
+    public static Atm create(Bank bank) {
         switch (bank) {
             case TINKOFF:
-                return new TinkoffAtm(balance);
+                return new TinkoffAtm();
             case SBERBANK:
-                return new SberbankAtm(balance);
+                return new SberbankAtm();
             case ALFABANK:
-                return new AlfabankAtm(balance);
+                return new AlfabankAtm();
             default:
                 return null;
         }
