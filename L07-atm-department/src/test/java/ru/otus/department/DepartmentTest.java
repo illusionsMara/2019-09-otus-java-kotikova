@@ -17,9 +17,9 @@ public class DepartmentTest {
     private Atm tinkoffAtm;
     private Atm sberbankAtm;
     private Atm alfabankAtm;
-    private int tinkoffBalance;
-    private int sberbankBalance;
-    private int alfabankBalance;
+    private int tinkoffBalance = 260;
+    private int sberbankBalance = 280;
+    private int alfabankBalance = 170;
 
     @BeforeEach
     private void beforeEach() {
@@ -40,7 +40,6 @@ public class DepartmentTest {
                 NOMINAL_50,
                 NOMINAL_50,
                 NOMINAL_10);
-        tinkoffBalance = tinkoffAtm.getBalance();
         return tinkoffAtm;
     }
 
@@ -54,7 +53,6 @@ public class DepartmentTest {
                 NOMINAL_100,
                 NOMINAL_10,
                 NOMINAL_10);
-        sberbankBalance = sberbankAtm.getBalance();
         return sberbankAtm;
     }
 
@@ -67,7 +65,6 @@ public class DepartmentTest {
                 NOMINAL_50,
                 NOMINAL_10,
                 NOMINAL_10);
-        alfabankBalance = alfabankAtm.getBalance();
         return alfabankAtm;
     }
 

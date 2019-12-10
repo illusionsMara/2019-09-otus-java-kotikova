@@ -16,19 +16,11 @@ class AlfabankAtm implements Atm {
         Arrays.stream(Nominal.values()).forEach(nominal -> cells.add(new Cell(nominal)));
     }
 
-    /**
-     * Принять банкноту указанного номинала и положить в соответствующую ячейку
-     * @param nominal номинал банкноты
-     */
     public void accept(Nominal nominal) {
         Cell cell = getCell(nominal);
         cell.put();
     }
 
-    /**
-     * Принять перечень банкнот указанных номиналов и разложить по соответствующим ячейкам
-     * @param nominals номиналы банкнот
-     */
     public void acceptAll(Nominal... nominals) {
         for(Nominal nominal: nominals) {
             accept(nominal);
@@ -48,12 +40,6 @@ class AlfabankAtm implements Atm {
         return cells.stream().mapToInt(Cell::getBalance).sum();
     }
 
-    /**
-     * Выдать указанную сумму минимальным количеством банкнот
-     *
-     * @param amount сумма
-     * @throws AtmException, если данную сумму нельзя выдать
-     */
     public void giveOutAmount(int amount) throws AtmException {
         this.tryGiveOutAmount(amount);
         for(Cell cell: cells) {
@@ -70,9 +56,6 @@ class AlfabankAtm implements Atm {
         }
     }
 
-    /**
-     * Выдать сумму остатка денежных средств
-     */
     public int giveOutBalance() {
         return cells.stream().mapToInt(Cell::giveOutBalance).sum();
     }
