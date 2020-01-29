@@ -15,6 +15,7 @@
         <module>L04-aop</module>
         <module>L06-atm_emulator</module>
         <module>L07-atm-department</module>
+        <module>L14-jmm</module>
     </modules>
 
     <properties>
