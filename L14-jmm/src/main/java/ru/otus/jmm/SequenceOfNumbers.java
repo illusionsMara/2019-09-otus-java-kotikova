@@ -9,7 +9,7 @@ public class SequenceOfNumbers {
     private static final int MAX = 10;
 
     private final Object obj = new Object();
-    private boolean isTheFirstThreadWaiting;
+    private String activeThread = THREAD_1;
 
     public static void main(String[] args) throws InterruptedException {
         SequenceOfNumbers sequenceOfNumbers = new SequenceOfNumbers();
@@ -34,8 +34,7 @@ public class SequenceOfNumbers {
         boolean increase = (number == MIN);  // если начальное число установлено в MIN, значит первая фаза - инкремент до MAX
 
         while( true ) {
-            while( increase && number <= MAX ) {
-                String activeThread = isTheFirstThreadWaiting ? THREAD_2 : THREAD_1;
+            while( increase ) {
                 if( activeThread.equals( Thread.currentThread().getName() ) ) {
                     synchronized( obj ) {
                         System.out.println( activeThread + " : " + number );
@@ -44,22 +43,21 @@ public class SequenceOfNumbers {
                         } else {
                             number++;
                         }
-                        isTheFirstThreadWaiting ^= true;
+                        activeThread = THREAD_1.equals(activeThread) ? THREAD_2 : THREAD_1;
                     }
                 }
             }
             number++;
-            while( !increase && number >= MIN ) {
-                String activeThread = isTheFirstThreadWaiting ? THREAD_2 : THREAD_1;
+            while( !increase ) {
                 if( activeThread.equals( Thread.currentThread().getName() ) ) {
                     synchronized( obj ) {
-                        isTheFirstThreadWaiting ^= true;
                         System.out.println( activeThread + " : " + number );
                         if( number == MIN + 1 ) {
                             increase = true;
                         } else {
                             number--;
                         }
+                        activeThread = THREAD_1.equals(activeThread) ? THREAD_2 : THREAD_1;
                     }
                 }
             }
