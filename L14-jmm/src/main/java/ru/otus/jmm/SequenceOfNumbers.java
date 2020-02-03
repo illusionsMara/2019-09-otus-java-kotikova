@@ -7,6 +7,7 @@ public class SequenceOfNumbers {
     private static final String THREAD_2 = "Thread TWO";
     private static final int MIN = 1;
     private static final int MAX = 10;
+    private static final int ITERATIONS = 50;
 
     private final Object obj = new Object();
     private String activeThread = THREAD_1;
@@ -30,10 +31,11 @@ public class SequenceOfNumbers {
     }
 
     private void printNumbers() {
+        int i = 0;
         int number = MIN;   // устанавливаем для каждого потока начальное число в MIN
         boolean increase = (number == MIN);  // если начальное число установлено в MIN, значит первая фаза - инкремент до MAX
 
-        while( true ) {
+        while( i++ < ITERATIONS ) {
             while( increase ) {
                 if( activeThread.equals( Thread.currentThread().getName() ) ) {
                     synchronized( obj ) {
